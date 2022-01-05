@@ -1,0 +1,10 @@
+venv/
+.idea/
+__pycache__/
+app/audio/
+.DS_Store
+*.log
+TOKEN
+*.pkl
+.vscode
+.venv
