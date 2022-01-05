@@ -1,11 +1,11 @@
-version: '3'
+version: '3.9'
 services:
  text-search:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: text-search
-    image: python:alpine3.15
+    hostname: text-search
     environment:
       APP_DEBUG: "True"
       APP_PORT: ${APP_PORT}
@@ -25,11 +25,10 @@ services:
     hostname: mongodb
     container_name: mongodb
     restart: unless-stopped
-    command: mongod --auth 
+    command: mongod --bind_ip 0.0.0.0 
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MONGO_INITDB_DATABASE: db
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     ports:

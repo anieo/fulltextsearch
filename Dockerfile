@@ -6,5 +6,6 @@ COPY ./app /code/app
 
 WORKDIR /code/app
 EXPOSE $APP_PORT
-
-ENTRYPOINT ["uvicorn","app:app","--host",$APP_HOST,"--port",$APP_PORT]
+CMD uvicorn app:app --host $APP_HOST --port $APP_PORT 
+# # ENTRYPOINT [ " uvicorn " ," app:app "," --host "," $APP_HOST "," --port "," $APP_PORT " ]
+# ENTRYPOINT ["uvicorn","app:app","--host",$APP_HOST,"--port",$APP_PORT]

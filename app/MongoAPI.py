@@ -14,7 +14,7 @@ class MongoAPI:
         f"mongodb://{user}:{password}@{host}:{port}"))
         print(MONGODB_URL)
         
-        self.client = MongoClient(MONGODB_URL,serverSelectionTimeoutMS = 5000,uuidRepresentation='standard')  
+        self.client = MongoClient(MONGODB_URL,serverSelectionTimeoutMS = 10000,uuidRepresentation='standard')  
         
         database = data['database']
         collection = data['collection']
