@@ -2,7 +2,7 @@ version: '3'
 services:
  text-search:
     build:
-      context: app
+      context: .
       dockerfile: Dockerfile
     container_name: text-search
     image: python:alpine3.15
@@ -33,7 +33,7 @@ services:
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     ports:
-      - "27017:27017"
+      - "5000:5000"
     volumes:
       - ${DAT_VOLUME}:/data/db
     networks:

@@ -59,14 +59,14 @@ def main():
         "collection": "photos",
     }
     db=MongoAPI(data)
-# main()
+main()
 if __name__ == '__main__':
-    #TODO GET FROM ENVIROMENT VARIABLE
+    #TODO GET FROM ENVIROMENT VARIAexport $(cat app.env | xargs )BLE
     data = {
         "database": "db",
         "collection": "photos",
     }
 
-    # db=MongoAPI(data)
+    db=MongoAPI(data)
 
     uvicorn.run('app:app',debug=True, reload=True,port=os.environ['APP_PORT'], host=os.environ['APP_HOST'])

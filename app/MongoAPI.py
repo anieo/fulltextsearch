@@ -5,16 +5,11 @@ from databases import DatabaseURL
 from pymongo.common import TIMEOUT_OPTIONS
 class MongoAPI:
     def __init__(self, data):
-        #TODO take from envriroment variables
-        # conn="mongodb://{user}:{password}@{host}:{port}/default_db?authSource=admin"
 
         user=os.environ['DB_USER']
         password=os.environ['DB_PASSWORD']
         host=os.environ['DAT_HOST']
         port=os.environ['DAT_PORT']
-        # mongo_uri ="mongodb://"+user+":" + password + "@"+host+":"+port+"/db?authSource=admin"
-        # mongo_uri ="mongodb://asd:1234@172.17.0.1:5000"
-        # mongo_uri ="mongodb://"+host+":"+port
         MONGODB_URL =str(DatabaseURL(
         f"mongodb://{user}:{password}@{host}:{port}"))
         print(MONGODB_URL)
