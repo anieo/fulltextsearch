@@ -9,7 +9,11 @@ import os
 
 
 app = FastAPI(title = 'TEXT SEARCH API')
-db =None
+data = {
+    "database": "db",
+    "collection": "photos",
+    }
+db =MongoAPI(data)
 class Document(BaseModel):
     guid: UUID4
     title: str
@@ -51,22 +55,8 @@ def mongo_delete(guid:UUID4):
 async def mongo_search():
     raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED,detail="not implemented")
 
-def main():
-    print("connected")
-    global db
-    data = {
-        "database": "db",
-        "collection": "photos",
-    }
-    db=MongoAPI(data)
-main()
+
 if __name__ == '__main__':
     #TODO GET FROM ENVIROMENT VARIAexport $(cat app.env | xargs )BLE
-    data = {
-        "database": "db",
-        "collection": "photos",
-    }
-
-    db=MongoAPI(data)
 
     uvicorn.run('app:app',debug=True, reload=True,port=os.environ['APP_PORT'], host=os.environ['APP_HOST'])

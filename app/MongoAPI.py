@@ -5,7 +5,7 @@ from databases import DatabaseURL
 from pymongo.common import TIMEOUT_OPTIONS
 class MongoAPI:
     def __init__(self, data):
-
+        print("trying to connect")
         user=os.environ['DB_USER']
         password=os.environ['DB_PASSWORD']
         host=os.environ['DAT_HOST']
