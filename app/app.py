@@ -14,8 +14,12 @@ from nltk.corpus import stopwords
 from nltk import word_tokenize
 import re
 data = {
-    "database": "db",
+    "database": os.environ['DB_DATABASE'],
     "collection": "photos",
+    "user":os.environ['DB_USER'],
+    "password":os.environ['DB_PASSWORD'],
+    "host":os.environ['DAT_HOST'],
+    "port":os.environ['DAT_PORT'],
     }
 try:
     db =MongoAPI(data)
@@ -24,7 +28,7 @@ except errors.AutoReconnect as error:
     print("Message : ",error._message)
     raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,detail="Database Unavilable ")
 except errors.PyMongoError as error:
-    print("Message")
+    print("Message: ",error._message)
     raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,detail="Database Unavilable ")
 
 nltk.download('punkt')

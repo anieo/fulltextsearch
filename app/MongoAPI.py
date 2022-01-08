@@ -8,10 +8,12 @@ from pymongo.common import TIMEOUT_OPTIONS
 class MongoAPI:
     def __init__(self, data):
         print("trying to connect")
-        user=os.environ['DB_USER']
-        password=os.environ['DB_PASSWORD']
-        host=os.environ['DAT_HOST']
-        port=os.environ['DAT_PORT']
+        user=data['user']
+        password=data['password']
+        host=data['host']
+        port=data['port']
+        database = data['database']
+        collection = data['collection']
         
         MONGODB_URL =str(DatabaseURL(
         f"mongodb://{user}:{password}@{host}:{port}"))
@@ -20,9 +22,6 @@ class MongoAPI:
         self.client = MongoClient(MONGODB_URL,serverSelectionTimeoutMS = 10000,uuidRepresentation='standard')  
 
 
-            
-        database = data['database']
-        collection = data['collection']
 
         cursor = self.client[database]
         self.collection = cursor[collection]

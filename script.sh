@@ -13,6 +13,5 @@ docker run  -d -v $DAT_VOLUME:/data/db --name mongodb -p $DAT_PORT:27017 \
     -e MONGO_INITDB_DATABASE=$DB_DATABASE \
     mongo
 DAT_HOST=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}' mongodb )
-docker run  --name text-search --env-file  ./app.env -e DAT_HOST=$DAT_HOST -p $APP_PORT:$APP_PORT \
-    text-search
+docker run  --name text-search --env-file  ./app.env -e DAT_HOST=$DAT_HOST -p $APP_PORT:$APP_PORT  text-search
 
