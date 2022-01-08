@@ -22,7 +22,7 @@ services:
       - backend
  mongodb:
     image: mongo
-    hostname: mongodb
+    hostname: ${DAT_HOST}
     container_name: mongodb
     restart: unless-stopped
     command: mongod --bind_ip 0.0.0.0 
@@ -32,7 +32,7 @@ services:
       MONGODB_DATA_DIR: /data/db
       MONDODB_LOG_DIR: /dev/null
     ports:
-      - "5000:5000"
+      - "5000:27017"
     volumes:
       - ${DAT_VOLUME}:/data/db
     networks:

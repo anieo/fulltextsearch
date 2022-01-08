@@ -1,6 +1,7 @@
 FROM python:alpine3.15
 WORKDIR /code
 COPY ./requirments.txt /code/requirments.txt
+RUN apk add gcc libc-dev
 RUN pip install --no-cache-dir --upgrade -r requirments.txt  
 COPY ./app /code/app
 
