@@ -29,14 +29,15 @@ class search_request:
 	fuzzy:bool
 	threshold:float
 
-def Search(query,fuzzy,limit,threshold):
+def Search(query,fuzzy,limit,threshold,user_id=None):
     sr=search_request()
     sr.query=query
     sr.fuzzy=fuzzy
     sr.limit=limit
     sr.threshold=threshold
     js=sr.__dict__
-    print(js)
+    if user_id : js['user_id']=user_id
+    # print(js)
     response = r.get(url=url+'/search',json=js)
     print("Search : \t",url+"/search",response.status_code)
     return json.loads(response.content)
@@ -77,6 +78,8 @@ while True:
     print("Enter 4: Create")
     print("Enter 5: Exit")
     print("Enter 6: Delete created files")
+    print("Enter 7: Search with user ")
+    
     c=int(input("Select: "))
     if c==1 :
         query=input("Query :\t")
@@ -128,6 +131,19 @@ while True:
         print("********************","Exit","********************")
 
         break
+    if c==7 :
+        query=input("Query :\t")
+        fuzzy=int(input("Fuzzy (EX :1 or 0):\t"))
+        limit=int(input("Limit (EX : 10) = \t"))
+        threshold=float(input("Threshold (EX : 0.6) = \t"))
+        user_id=float(input("User ID(EX : 123) = \t"))
+        
+        fuzzy=fuzzy == 1
+        res=Search(query,fuzzy,limit,threshold,user_id)
+        print("***************","Search Results","***************")
+        print(json.dumps(res,indent=4))
+        print("***************","**************","***************")
+        pass
     
 
     

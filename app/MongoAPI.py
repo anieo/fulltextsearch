@@ -51,21 +51,23 @@ class MongoAPI:
     def delete(self, guid):
         response = self.collection.delete_one({'guid':guid})
         return response.deleted_count
-    def search(self, text,fuzzy,limit,threshold):
+    def search(self, text,fuzzy,limit,threshold,user_id=None):
         if fuzzy:
-                
-            query=[{"$match":{"$text": 
+            match={"$and":[{"user_id":user_id},{"$text": 
                         {
                             "$search": text, 
                             "$caseSensitive": False, 
                             "$diacriticSensitive": False
                         }
-                }}
+                }]}
+            match= match if user_id else match['$and'][1]
+            query=[{"$match":match}
                         ,
-                {"$project":
+                    {"$project":
                         {
                             "score": {"$meta": "textScore"}, 
                             "guid": 1, 
+                            "user_id":1,
                             "title": 1, 
                             "body": 1, 
                             "data": 1 
@@ -76,12 +78,17 @@ class MongoAPI:
                 ]
             documents = self.collection.aggregate(query)
         else:
-            documents = self.collection.find({"$or":[{"title":{"$regex":text}},{"body":{"$regex":text}}]},
+            query={"$or":[{"title":{"$regex":text}},{"body":{"$regex":text}}]}
+            if user_id:
+                query={"$and":[{"user_id":user_id},query]}
+            documents = self.collection.find(query,
             {
-        "guid": 1, 
+        "guid": 1,
+        "user_id":1, 
         "title": 1, 
         "body": 1, 
-        "data": 1 }).limit(limit)
+        "data": 1
+        }).limit(limit)
         # documents = self.collection.find({
         #     "$or":[
         #         {"title":text},

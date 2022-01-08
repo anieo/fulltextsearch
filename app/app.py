@@ -38,12 +38,14 @@ stop_words = set(stopwords.words('english'))
 app = FastAPI(title = 'TEXT SEARCH API')
 class Document(BaseModel):
     guid: UUID4
+    user_id:int
     title: str
     body: str
     data: dict
     fuzzy: Optional[str] = None
 class SearchQuery(BaseModel):
     query: str
+    user_id:Optional[int]=None
     limit: Optional[int]=10
     threshold: Optional[float]=0.6
     fuzzy: Optional[bool]=True
@@ -130,7 +132,7 @@ async def mongo_search(q:SearchQuery):
         # print(search_text)    
         # search_text=q.query
     try:
-        res=db.search(search_text,q.fuzzy,q.limit,q.threshold)
+        res=db.search(search_text,q.fuzzy,q.limit,q.threshold,q.user_id)
     except errors.PyMongoError as error:
         print(error._message)
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,detail="Connection error")
