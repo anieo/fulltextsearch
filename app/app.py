@@ -72,13 +72,15 @@ async def mongo_create(document:Document,status_code=201):
     document.fuzzy=fill_fuzzy(document.title,document.body)
     try:
         guid,sucsess=db.create(document.dict())
+    except errors.DuplicateKeyError as error:
+        print(error._message)
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail="Document already exists")
     except errors.WriteError as error:
         print(error._message)
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail="Write error")
-        
-    if not sucsess:
-        #TODO ask if the same guid can be entered twice
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail="Document already exists")
+    except errors.PyMongoError as error:
+        print(error._message)
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE,detail="Connection error")
     response = {'Status': 'Successfully Inserted',
                   'guid': guid}
     return response

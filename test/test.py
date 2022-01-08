@@ -1,3 +1,4 @@
+from pickle import FALSE
 import requests as r
 import json
 import os
@@ -6,11 +7,17 @@ url="http://localhost:5001/api/doc"
 def Create(file):
     response = r.post(url=url+"/create",json=file)
     print("Create :\t",url+"/create",response.status_code)
-    return json.loads(response.content)['guid']
+    try:
+        return json.loads(response.content)['guid']
+    except:
+        return False
 def Delete(guid):
     response = r.delete(url=url+"/delete/"+guid)
     print("Delete :\t",url+"/delete/"+guid,response.status_code)
-    return json.loads(response.content)['deleted']
+    try:
+        return json.loads(response.content)['deleted']
+    except:
+        return False
 
 def Read(guid):
     response = r.get(url=url+'/read/'+guid)
@@ -43,6 +50,8 @@ for i in os.listdir(json_files):
     if os.path.isfile(full_path):
         paths.append(full_path)
 print(paths)
+print("****************","loading data","****************")
+
 for i in paths:
     print("File : ",i.split('/')[-1])
     #create
@@ -50,17 +59,24 @@ for i in paths:
         files.append(json.loads(f.read()))
     print()
     guid=Create(files[-1])
+    if not guid: 
+        print("Document exist:\t",files[-1]['guid'])
+        continue
     print("Created : ",guid)
     #read
     nguid=Read(guid)
     print("Read : ",nguid)
-print("Finished loading data")
+
+print("***********","Finished loading data","************")
+print("")
+
 while True:
     print("Enter 1: Search")
     print("Enter 2: Delete")
     print("Enter 3: Read")
     print("Enter 4: Create")
     print("Enter 5: Exit")
+    print("Enter 6: Delete created files")
     c=int(input("Select: "))
     if c==1 :
         query=input("Query :\t")
@@ -76,6 +92,9 @@ while True:
     elif c==2 :
         i=int(input("Enter file no :\t"))
         rguid=Delete(files[i]['guid'])
+        if not rguid: 
+            print("Document doexn't exist:\t",files[i]['guid'])
+            continue
         print("Deleted ",rguid)
         print("***************","**************","***************")
         pass
@@ -89,12 +108,27 @@ while True:
     elif c==4 :
         i=int(input("Enter file number:\t"))
         res=Create(files[i])
+        if not res: 
+            print("Document exist:\t",files[i]['guid'])
+            continue
         pass
     elif c==5:
         print("Exit")
         print("********************","Exit","********************")
 
         break
+    elif c==6:
+        for file in files:
+            dguid=Delete(file['guid'])
+            if not dguid: 
+                print("Document doexn't exist:\t",file['guid'])
+                continue
+            print("Deleted ",dguid)
+        print("Exit")
+        print("********************","Exit","********************")
+
+        break
+    
 
     
     

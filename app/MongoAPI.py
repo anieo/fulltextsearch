@@ -1,3 +1,4 @@
+from enum import unique
 from logging import error
 import os
 from nltk.sem.evaluate import Error
@@ -27,8 +28,9 @@ class MongoAPI:
         self.collection = cursor[collection]
         self.data = data
         try:
+            self.collection.create_index([("guid",1)],unique=True)
             self.collection.create_index([("fuzzy","text")],default_language='english')
-        except Error as error:
+        except errors.PyMongoError as error:
             print(error)
             pass
         # self.collection.create_index([("title" , "text"),("body", "text")],name="match", default_language='english')
