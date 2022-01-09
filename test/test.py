@@ -136,7 +136,7 @@ while True:
         fuzzy=int(input("Fuzzy (EX :1 or 0):\t"))
         limit=int(input("Limit (EX : 10) = \t"))
         threshold=float(input("Threshold (EX : 0.6) = \t"))
-        user_id=float(input("User ID(EX : 123) = \t"))
+        user_id=input("User ID(EX : 123) = \t")
         
         fuzzy=fuzzy == 1
         res=Search(query,fuzzy,limit,threshold,user_id)
