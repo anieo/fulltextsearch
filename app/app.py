@@ -38,14 +38,14 @@ stop_words = set(stopwords.words('english'))
 app = FastAPI(title = 'TEXT SEARCH API')
 class Document(BaseModel):
     guid: UUID4
-    user_id:int
+    user_id:str
     title: str
     body: str
     data: dict
     fuzzy: Optional[str] = None
 class SearchQuery(BaseModel):
     query: str
-    user_id:Optional[int]=None
+    user_id:Optional[str]=None
     limit: Optional[int]=10
     threshold: Optional[float]=0.6
     fuzzy: Optional[bool]=True
