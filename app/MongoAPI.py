@@ -29,7 +29,7 @@ class MongoAPI:
         self.data = data
         try:
             self.collection.create_index([("guid",1)],unique=True)
-            self.collection.create_index([("fuzzy","text")],default_language='english')
+            self.collection.create_index([("user_id","text"),("fuzzy","text")],default_language='english')
         except errors.PyMongoError as error:
             print(error)
             pass
@@ -53,6 +53,7 @@ class MongoAPI:
         return response.deleted_count
     def search(self, text,fuzzy,limit,threshold,user_id=None):
         if fuzzy:
+            text= user_id+" "+text if user_id else text
             match={"$and":[{"user_id":user_id},{"$text": 
                         {
                             "$search": text, 
@@ -60,7 +61,8 @@ class MongoAPI:
                             "$diacriticSensitive": False
                         }
                 }]}
-            match= match if user_id else match['$and'][1]
+            # match= match if user_id else match['$and'][1]
+            match=match['$and'][1]
             query=[{"$match":match}
                         ,
                     {"$project":
