@@ -29,8 +29,11 @@ class MongoAPI:
         self.data = data
         try:
             self.collection.create_index([("guid",1)],unique=True)
-            self.collection.create_index([("user_id","text"),("fuzzy","text")],default_language='english')
+            self.collection.create_index([("user_id","text"),("fuzzy","text")],name="textIndex")
         except errors.PyMongoError as error:
+            print(error)
+            pass
+        except AttributeError as error:
             print(error)
             pass
         # self.collection.create_index([("title" , "text"),("body", "text")],name="match", default_language='english')
@@ -53,7 +56,7 @@ class MongoAPI:
         return response.deleted_count
     def search(self, text,fuzzy,limit,threshold,user_id=None):
         if fuzzy:
-            text= user_id+" "+text if user_id else text
+            # text='(\"'+user_id+'\"'+" "+text if user_id else text
             match={"$and":[{"user_id":user_id},{"$text": 
                         {
                             "$search": text, 
@@ -61,8 +64,8 @@ class MongoAPI:
                             "$diacriticSensitive": False
                         }
                 }]}
-            # match= match if user_id else match['$and'][1]
-            match=match['$and'][1]
+            match= match if user_id else match['$and'][1]
+            # match=match['$and'][1]
             query=[{"$match":match}
                         ,
                     {"$project":
@@ -84,18 +87,14 @@ class MongoAPI:
             if user_id:
                 query={"$and":[{"user_id":user_id},query]}
             documents = self.collection.find(query,
-            {
-        "guid": 1,
-        "user_id":1, 
-        "title": 1, 
-        "body": 1, 
-        "data": 1
-        }).limit(limit)
-        # documents = self.collection.find({
-        #     "$or":[
-        #         {"title":text},
-        #         {"body":text}
-        #         ]})
+            { 
+            "guid": 1, 
+            "user_id":1, 
+            "title": 1, 
+            "body": 1, 
+            "data": 1 
+            }).limit(limit)
+
         output = [{item: data[item] for item in data if item != '_id'} for data in documents]
 
         return output
